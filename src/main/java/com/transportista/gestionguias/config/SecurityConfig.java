@@ -39,6 +39,9 @@ public class SecurityConfig {
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
                 .build();
     }
+/**
+ * Cambio realizado para validar la ejecución automática del pipeline de GitHub Actions.
+ */
 
     @Bean
     public NimbusJwtDecoder jwtDecoder() {
