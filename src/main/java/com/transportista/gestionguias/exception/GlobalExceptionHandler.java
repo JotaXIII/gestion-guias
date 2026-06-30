@@ -1,57 +1,69 @@
 package com.transportista.gestionguias.exception;
 
-import com.transportista.gestionguias.dto.ErrorResponse;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.LocalDateTime;
-import java.util.stream.Collectors;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(RecursoNoEncontradoException.class)
-    public ResponseEntity<ErrorResponse> manejarRecursoNoEncontrado(RecursoNoEncontradoException ex) {
-        ErrorResponse response = new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.NOT_FOUND.value(),
-                ex.getMessage(),
-                "Recurso no encontrado"
-        );
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> manejarValidaciones(MethodArgumentNotValidException ex) {
-        String mensaje = ex.getBindingResult()
+    public ResponseEntity<Map<String, Object>> manejarValidaciones(MethodArgumentNotValidException ex) {
+        Map<String, Object> respuesta = new HashMap<>();
+
+        respuesta.put("fecha", LocalDateTime.now());
+        respuesta.put("estado", HttpStatus.BAD_REQUEST.value());
+        respuesta.put("mensaje", "Error de validación");
+        respuesta.put("error", ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
-                .collect(Collectors.joining("; "));
+                .toList());
 
-        ErrorResponse response = new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.BAD_REQUEST.value(),
-                mensaje,
-                "Validación fallida"
-        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respuesta);
+    }
 
-        return ResponseEntity.badRequest().body(response);
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Map<String, Object>> manejarRuntimeException(
+            RuntimeException ex,
+            HttpServletRequest request) {
+
+        ex.printStackTrace();
+
+        Map<String, Object> respuesta = new HashMap<>();
+
+        respuesta.put("fecha", LocalDateTime.now());
+        respuesta.put("estado", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        respuesta.put("mensaje", "Ocurrió un error interno en el servidor");
+        respuesta.put("error", ex.getMessage());
+        respuesta.put("ruta", request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> manejarErrorGeneral(Exception ex) {
-        ErrorResponse response = new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Ocurrió un error interno en el servidor",
-                "Error interno"
-        );
+    public ResponseEntity<Map<String, Object>> manejarException(
+            Exception ex,
+            HttpServletRequest request) {
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        ex.printStackTrace();
+
+        Map<String, Object> respuesta = new HashMap<>();
+
+        respuesta.put("fecha", LocalDateTime.now());
+        respuesta.put("estado", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        respuesta.put("mensaje", "Ocurrió un error interno en el servidor");
+        respuesta.put("error", ex.getMessage());
+        respuesta.put("ruta", request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta);
     }
 }
