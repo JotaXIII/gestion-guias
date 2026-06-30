@@ -19,7 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private static final String JWK_SET_URI =
-            "https://gestionguiasgrupo16.b2clogin.com/gestionguiasgrupo16.onmicrosoft.com/B2C_1_signupsignin/discovery/v2.0/keys";
+            "https://gestionguiasgrupo16.b2clogin.com/gestionguiasgrupo16.onmicrosoft.com/B2C_1_1_signupsignin/discovery/v2.0/keys";
 
     private static final String ISSUER =
             "https://gestionguiasgrupo16.b2clogin.com/fa29ef4f-f0db-41c7-b132-8bb21fe905ba/v2.0/";
