@@ -22,7 +22,7 @@ public class SecurityConfig {
             "https://gestionguiasgrupo16.b2clogin.com/gestionguiasgrupo16.onmicrosoft.com/B2C_1_1_signupsignin/discovery/v2.0/keys";
 
     private static final String ISSUER =
-            "https://gestionguiasgrupo16.b2clogin.com/fa29ef4f-f0db-41c7-b132-8bb21fe905ba/v2.0/";
+            "https://gestionguiasgrupo16.b2clogin.com/tfp/fa29ef4f-f0db-41c7-b132-8bb21fe905ba/B2C_1_1_signupsignin/v2.0/";
 
     private static final String AUDIENCE =
             "ffcb0203-f967-4ae3-a623-a2b7e611d127";
