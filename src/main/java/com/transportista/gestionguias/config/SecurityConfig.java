@@ -15,6 +15,10 @@ import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+/**
+ * Segundo Cambio realizado para validar la ejecución automática del pipeline de GitHub Actions.
+ */
+
 @Configuration
 public class SecurityConfig {
 
@@ -39,9 +43,6 @@ public class SecurityConfig {
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
                 .build();
     }
-/**
- * Cambio realizado para validar la ejecución automática del pipeline de GitHub Actions.
- */
 
     @Bean
     public NimbusJwtDecoder jwtDecoder() {
